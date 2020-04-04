@@ -1,0 +1,24 @@
+{
+  "name": "poolpi",
+  "version": "0.0.1",
+  "description": "pool measurement program",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jahartley/poolPi.git"
+  },
+  "author": "Judson Hartley <judson.hartley2@gmail.com> (https://www.jahartley.com)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jahartley/poolPi/issues"
+  },
+  "homepage": "https://github.com/jahartley/poolPi#readme",
+  "dependencies": {
+    "bme680-sensor": "^0.1.10",
+    "i2c-bus": "^5.1.0",
+    "mqtt": "^3.0.0"
+  }
+}
