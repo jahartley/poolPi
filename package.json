@@ -17,8 +17,8 @@
   },
   "homepage": "https://github.com/jahartley/poolPi#readme",
   "dependencies": {
-    "bme680-sensor": "^0.1.10",
     "i2c-bus": "^5.1.0",
+    "bme680-sensor": "^0.1.10",
     "mqtt": "^3.0.0"
   }
 }
