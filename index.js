@@ -23,5 +23,6 @@ bme680.initialize().then(async () => {
     client.publish('home/pool/airTemp1', bme680result.data.temperature.toString())
     client.publish('home/pool/airPress1', bme680result.data.pressure.toString())
     client.publish('home/pool/airHumid1', bme680result.data.humidity.toString())
+    if (bme680result.data.heat_stable == true) client.publish('home/pool/airQuality1', bme680result.data.gas_resistance.toString());
   }, 120000);
 });
