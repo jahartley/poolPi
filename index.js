@@ -23,7 +23,8 @@ bme680.initialize().then(async () => {
   console.log('Sensor Init')
   setInterval(async () => {
     bme680result =  await bme680.getSensorData()
-    console.log(bme680result)
+    // console.log(bme680result)
+   // console.log('680 read');
     client.publish('home/pool/airTemp1', bme680result.data.temperature.toString())
     client.publish('home/pool/airPress1', bme680result.data.pressure.toString())
     client.publish('home/pool/airHumid1', bme680result.data.humidity.toString())
@@ -36,10 +37,15 @@ sense.init().then(() => {
   sense.search()}).then(() => {
     setInterval(async () => {
       sense.readTemperatures().then(temps => {
-        console.log(temps); // Returns a list of temperature reading from all found sensors
-        console.log('first temp');
-        console.log(temps[0]);
-      })  
+        //console.log('ds18b20 read');
+        //console.log(temps); // Returns a list of temperature reading from all found sensors
+        //console.log('first temp');
+        //console.log(temps[0]);
+        //console.log(temps.length);
+        for (i = 0; i < temps.length; i++) {
+          client.publish('home/pool/poolTemp' + i.toString(), temps[i].value.toString());
+        }
+      })
     }, 120000)
   })
 .catch(err => {
