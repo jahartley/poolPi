@@ -1,6 +1,6 @@
 // EZO calibration program.
-// must have other i2c programs stopped.
-
+// must have other i2c programs stopped
+const { sleep } = require('./sleep.js');
 const prompt = require('prompt-sync')({sigint: true});
 const i2c = require('i2c-bus');
 
@@ -152,9 +152,9 @@ async function calibrate() {
 
 } //calibrate end
 
-function sleep(millis) {
-    return new Promise(resolve => setTimeout(resolve, millis));
-}
+//function sleep(millis) {
+//    return new Promise(resolve => setTimeout(resolve, millis));
+//}
 
 async function info() {
 //  console.log('info start');

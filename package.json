@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/jahartley/poolPi#readme",
   "dependencies": {
+    "@jahartley/ds2482": "^0.2.0",
+    "@jahartley/ds2482-temperature": "^0.1.0",
     "bme680-sensor": "^0.1.10",
     "i2c-bus": "^5.1.0",
     "mqtt": "^3.0.0",
