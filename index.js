@@ -73,7 +73,7 @@ bme680.initialize().then(async () => {
 sense.init().then(() => {
   console.log('ds18b20 init')
   sense.search()}).
-then(console.log).
+//then(console.log).
 then(() => {
     setInterval(async () => {
       sense.readTemperatures().then(temps => {
