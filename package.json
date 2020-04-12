@@ -1,6 +1,6 @@
 {
   "name": "poolpi",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "pool measurement program",
   "main": "index.js",
   "scripts": {
@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/jahartley/poolPi#readme",
   "dependencies": {
+    "@jahartley/ezo-i2c": "^0.1.1",
     "@jahartley/ds2482": "^0.2.0",
     "@jahartley/ds2482-temperature": "^0.1.0",
     "bme680-sensor": "^0.1.10",
