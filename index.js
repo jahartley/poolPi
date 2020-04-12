@@ -90,7 +90,7 @@ then(() => {
           client.publish('home/pool/poolTemp0', poolTemp.toString());
           poolTempOld = poolTemp;
           ezo.phReadTemp('ph').then((resp) => {
-            if (resp.parseFloat() != poolTemp) {
+            if (resp != poolTemp) {
               console.log(poolTemp);
               //ezo.phWriteTemp('ph', poolTemp);
             } 
