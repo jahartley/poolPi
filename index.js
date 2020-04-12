@@ -91,8 +91,8 @@ then(() => {
           poolTempOld = poolTemp;
           ezo.phReadTemp('ph').then((resp) => {
             if (resp != poolTemp) {
-              console.log(poolTemp);
-              //ezo.phWriteTemp('ph', poolTemp);
+              //console.log(poolTemp);
+              ezo.phWriteTemp('ph', poolTemp);
             } 
           })
         }
