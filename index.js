@@ -47,7 +47,7 @@ bme680.initialize().then(async () => {
 
     if (bme680result.data.heat_stable == true) {
       airQuality1 = parseFloat(bme680result.data.gas_resistance)
-      if ((airQuality1 - airQuality1Old) > 10000 || (airQuality1 - airQuality1Old) < -10000 ) {
+      if ((airQuality1 - airQuality1Old) > 2000 || (airQuality1 - airQuality1Old) < -2000 ) {
         client.publish('home/pool/airQuality1', airQuality1.toString())
         airQuality1Old = airQuality1;
       }
@@ -57,7 +57,7 @@ bme680.initialize().then(async () => {
       client.publish('home/pool/airTemp1', airTemp1.toString())
       airTemp1Old = airTemp1;
     }
-    if ((airPress1 - airPress1Old) > 0.5 || (airPress1 - airPress1Old) < -0.5) {
+    if ((airPress1 - airPress1Old) > 0.2 || (airPress1 - airPress1Old) < -0.2) {
       client.publish('home/pool/airPress1', airPress1.toString());
       airPress1Old = airPress1;
     }
