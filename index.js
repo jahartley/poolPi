@@ -39,7 +39,7 @@ client.on('message', function(topic, message) {
       if (airTemp1Old != 0) client.publish('home/pool/airTemp1', airTemp1Old.toString())
       if (airPress1Old != 0) client.publish('home/pool/airPress1', airPress1Old.toString())
       if (airHumid1Old != 0) client.publish('home/pool/airHumid1', airHumid1Old.toString())
-      if (airQuality1Old != 0) client.publish('home/pool/airQuality1', airQuality1Old.toString())
+      if (airQuality1Old != 0) client.publish('home/pool/airQuality1', airQuality1Old.toFixed(0).toString())
       if (poolTempOld != 0) client.publish('home/pool/poolTemp0', poolTempOld.toString())
       if (phOld != 0) client.publish('home/pool/ph1', phOld.toString())
       if (orpOld != 0) client.publish('home/pool/orp1', orpOld.toString())
@@ -59,7 +59,7 @@ bme680.initialize().then(async () => {
     if (bme680result.data.heat_stable == true) {
       airQuality1 = parseFloat(bme680result.data.gas_resistance)
       if ((airQuality1 - airQuality1Old) > 2000 || (airQuality1 - airQuality1Old) < -2000 ) {
-        client.publish('home/pool/airQuality1', airQuality1.toString())
+        client.publish('home/pool/airQuality1', airQuality1.toFixed(0).toString())
         airQuality1Old = airQuality1;
       }
     }
