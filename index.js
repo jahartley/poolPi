@@ -30,9 +30,20 @@ var poolTemp = 0;
 var ph = 0;
 var orp = 0;
 
+client.on('connect', () => {
+  client.subscribe('home/boss/resend');
+})
 
 client.on('message', function(topic, message) {
-  console.log(message.toString())
+    if (topic.toString() == 'home/boss/resend' && message.toString() == '1') {
+      if (airTemp1Old != 0) client.publish('home/pool/airTemp1', airTemp1Old.toString())
+      if (airPress1Old != 0) client.publish('home/pool/airPress1', airPress1Old.toString())
+      if (airHumid1Old != 0) client.publish('home/pool/airHumid1', airHumid1Old.toString())
+      if (airQuality1Old != 0) client.publish('home/pool/airQuality1', airQuality1Old.toString())
+      if (poolTempOld != 0) client.publish('home/pool/poolTemp0', poolTempOld.toString())
+      if (phOld != 0) client.publish('home/pool/ph1', phOld.toString())
+      if (orpOld != 0) client.publish('home/pool/orp1', orpOld.toString())
+    }
 })
 
 
