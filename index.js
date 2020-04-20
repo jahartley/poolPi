@@ -97,6 +97,7 @@ then(() => {
         //  client.publish('home/pool/poolTemp' + i.toString(), temps[i].value.toString());
         //}
         poolTemp = parseFloat(temps[0].value);
+        poolTemp = poolTemp.toFixed(1);
         if ((poolTemp - poolTempOld) > 0.2 || (poolTemp - poolTempOld) < -0.2 ) {
           client.publish('home/pool/poolTemp0', poolTemp.toString());
           poolTempOld = poolTemp;
