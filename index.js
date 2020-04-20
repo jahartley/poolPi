@@ -38,6 +38,7 @@ client.on('connect', () => {
 
 client.on('message', function(topic, message) {
     if (topic.toString() == 'home/boss/resend' && message.toString() == '1') {
+        client.publish('home/pi62', 'ok');
       if (airTemp1Old != 0) client.publish('home/pool/airTemp1', airTemp1Old.toString())
       if (airPress1Old != 0) client.publish('home/pool/airPress1', airPress1Old.toString())
       if (airHumid1Old != 0) client.publish('home/pool/airHumid1', airHumid1Old.toString())
