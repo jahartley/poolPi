@@ -153,3 +153,8 @@ ezo.info('ph').then(console.log)
       }
     }, 10000);
 }).catch(console.log);
+
+//watchdog
+setInterval(() => {
+  client.publish('home/pi62', 'ok');
+}, 300000);
