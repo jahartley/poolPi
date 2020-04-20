@@ -14,6 +14,8 @@ const sense = new DS18B20();
 const EZO = require('@jahartley/ezo-i2c');
 const ezo = new EZO();
 
+console.log('startup');
+
 var airTemp1Old = 0;
 var airPress1Old = 0;
 var airHumid1Old = 0;
