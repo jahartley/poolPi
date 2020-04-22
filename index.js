@@ -21,6 +21,7 @@ var airPress1Old = 0;
 var airHumid1Old = 0;
 var airQuality1Old = 0;
 var poolTempOld = 0;
+var ezoTemp = 0;
 var phOld = 0;
 var orpOld = 0;
 
@@ -34,6 +35,7 @@ var orp = 0;
 
 client.on('connect', () => {
   client.subscribe('home/boss/resend');
+  client.publish('home/pi62', 'ok');
 })
 
 client.on('message', function(topic, message) {
@@ -104,12 +106,15 @@ then(() => {
         if ((poolTemp - poolTempOld) > 0.2 || (poolTemp - poolTempOld) < -0.2 ) {
           client.publish('home/pool/poolTemp0', poolTemp.toString());
           poolTempOld = poolTemp;
-          ezo.phReadTemp('ph').then((resp) => {
-            if (resp != poolTemp) {
-              //console.log(poolTemp);
-              ezo.phWriteTemp('ph', poolTemp);
-            } 
-          })
+          if ((poolTemp - ezoTemp) > 1.2 || (poolTemp - ezoTemp) < -1.2 ) {
+            ezoTemp = poolTemp;
+            ezo.phReadTemp('ph').then((resp) => {
+              if (resp != poolTemp) {
+                //console.log(poolTemp);
+                ezo.phWriteTemp('ph', poolTemp);
+              } 
+            })
+          }
         }
       })
     }, 30000)
