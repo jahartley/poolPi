@@ -33,6 +33,9 @@ var poolTemp = 0;
 var ph = 0;
 var orp = 0;
 
+var startTime = Date.now();
+var startupDone = false;
+
 client.on('connect', () => {
   client.subscribe('home/boss/resend');
   client.publish('home/pi62', 'ok');
@@ -44,10 +47,10 @@ client.on('message', function(topic, message) {
       if (airTemp1Old != 0) client.publish('home/pool/airTemp1', airTemp1Old.toString())
       if (airPress1Old != 0) client.publish('home/pool/airPress1', airPress1Old.toString())
       if (airHumid1Old != 0) client.publish('home/pool/airHumid1', airHumid1Old.toString())
-      if (airQuality1Old != 0) client.publish('home/pool/airQuality1', airQuality1Old.toFixed(0).toString())
+      if (airQuality1Old != 0 && startupDone) client.publish('home/pool/airQuality1', airQuality1Old.toFixed(0).toString())
       if (poolTempOld != 0) client.publish('home/pool/poolTemp0', poolTempOld.toString())
-      if (phOld != 0) client.publish('home/pool/ph1', phOld.toString())
-      if (orpOld != 0) client.publish('home/pool/orp1', orpOld.toString())
+      if (phOld != 0 && startupDone) client.publish('home/pool/ph1', phOld.toString())
+      if (orpOld != 0 && startupDone) client.publish('home/pool/orp1', orpOld.toString())
     }
 })
 
@@ -64,7 +67,7 @@ bme680.initialize().then(async () => {
     if (bme680result.data.heat_stable == true) {
       airQuality1 = parseFloat(bme680result.data.gas_resistance)
       if ((airQuality1 - airQuality1Old) > 2000 || (airQuality1 - airQuality1Old) < -2000 ) {
-        client.publish('home/pool/airQuality1', airQuality1.toFixed(0).toString())
+        if (startupDone) client.publish('home/pool/airQuality1', airQuality1.toFixed(0).toString());
         airQuality1Old = airQuality1;
       }
     }
@@ -152,11 +155,11 @@ ezo.info('ph').then(console.log)
       ph = parseFloat(ph);
       orp = parseFloat(orp);
       if ((ph - phOld) > 0.01 || (ph - phOld) < -0.01 ) {
-        client.publish('home/pool/ph1', ph.toString());
+        if (startupDone) client.publish('home/pool/ph1', ph.toString());
         phOld = ph;
       }
       if ((orp - orpOld) > 5 || (orp - orpOld) < -5 ) {
-        client.publish('home/pool/orp1', orp.toString());
+        if (startupDone) client.publish('home/pool/orp1', orp.toString());
         orpOld = orp;
       }
     }, 10000);
@@ -166,3 +169,14 @@ ezo.info('ph').then(console.log)
 setInterval(() => {
   client.publish('home/pi62', 'ok');
 }, 300000);
+
+//startup delay for slow senors
+setInterval(() => {
+  if ((startTime + 300000) < Date.now()) {
+    startupDone = true;
+    client.publish('home/pool/ph1', ph.toString());
+    client.publish('home/pool/orp1', orp.toString());
+    client.publish('home/pool/airQuality1', airQuality1.toFixed(0).toString());
+  }
+}, 2000);
+
