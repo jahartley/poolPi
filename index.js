@@ -172,11 +172,12 @@ setInterval(() => {
 
 //startup delay for slow senors
 setInterval(() => {
-  if ((startTime + 300000) < Date.now()) {
-    startupDone = true;
-    client.publish('home/pool/ph1', ph.toString());
-    client.publish('home/pool/orp1', orp.toString());
-    client.publish('home/pool/airQuality1', airQuality1.toFixed(0).toString());
+  if (startupDone == false) {
+    if ((startTime + 300000) < Date.now()) {
+      startupDone = true;
+      client.publish('home/pool/ph1', ph.toString());
+      client.publish('home/pool/orp1', orp.toString());
+      client.publish('home/pool/airQuality1', airQuality1.toFixed(0).toString());
+    }
   }
 }, 2000);
-
