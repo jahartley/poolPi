@@ -97,6 +97,7 @@ then(() => {
         //  client.publish('home/pool/poolTemp' + i.toString(), temps[i].value.toString());
         //}
         poolTemp = parseFloat(temps[0].value);
+        client.publish('home/pool/raw/poolTemp0', poolTemp.toString());
         if ((poolTemp - poolTempOld) > 0.2 || (poolTemp - poolTempOld) < -0.2 ) {
           client.publish('home/pool/poolTemp0', poolTemp.toString());
           poolTempOld = poolTemp;
@@ -142,6 +143,8 @@ ezo.info('ph').then(console.log)
       //console.log(orpResult)
       ph = parseFloat(ph);
       orp = parseFloat(orp);
+      client.publish('home/pool/raw/ph', ph.toString());
+      client.publish('home/pool/raw/orp', orp.toString());
       if ((ph - phOld) > 0.01 || (ph - phOld) < -0.01 ) {
         client.publish('home/pool/ph1', ph.toString());
         phOld = ph;
@@ -150,5 +153,5 @@ ezo.info('ph').then(console.log)
         client.publish('home/pool/orp1', orp.toString());
         orpOld = orp;
       }
-    }, 10000);
+    }, 20000);
 }).catch(console.log);
