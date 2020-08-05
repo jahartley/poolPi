@@ -63,7 +63,7 @@ async function calibrate() {
           console.log('cal mid write start');
           var calBuf = Buffer.from(`Cal,mid,${mid}`);
           console.log(calBuf.toString());
-          //i2c1.i2cWriteSync(i2cAddress, calBuf.length, calBuf);
+          i2c1.i2cWriteSync(i2cAddress, calBuf.length, calBuf);
           console.log('cal mid write complete');
           await sleep(1000);
         } // if mid===mid2
@@ -85,7 +85,7 @@ async function calibrate() {
           console.log('cal low write start');
           var calBuf = Buffer.from(`Cal,low,${mid}`);
           console.log(calBuf.toString());
-          //i2c1.i2cWriteSync(i2cAddress, calBuf.length, calBuf);
+          i2c1.i2cWriteSync(i2cAddress, calBuf.length, calBuf);
           console.log('cal low write complete');
           await sleep(1000);
         } // if mid===mid2
@@ -108,7 +108,7 @@ async function calibrate() {
           console.log('cal high write start');
           var calBuf = Buffer.from(`Cal,high,${mid}`);
           console.log(calBuf.toString());
-          //i2c1.i2cWriteSync(i2cAddress, calBuf.length, calBuf);
+          i2c1.i2cWriteSync(i2cAddress, calBuf.length, calBuf);
           console.log('cal high write complete');
           await sleep(1000);
         } // if mid===mid2
@@ -137,7 +137,7 @@ async function calibrate() {
           console.log('cal ORP write start');
           var calBuf = Buffer.from(`Cal,${mid}`);
           console.log(calBuf.toString());
-          //i2c1.i2cWriteSync(i2cAddress, calBuf.length, calBuf);
+          i2c1.i2cWriteSync(i2cAddress, calBuf.length, calBuf);
           console.log('cal ORP write complete');
           await sleep(1000);
         } // if mid===mid2

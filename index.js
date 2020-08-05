@@ -14,11 +14,14 @@ const sense = new DS18B20();
 const EZO = require('@jahartley/ezo-i2c');
 const ezo = new EZO();
 
+console.log('startup');
+
 var airTemp1Old = 0;
 var airPress1Old = 0;
 var airHumid1Old = 0;
 var airQuality1Old = 0;
 var poolTempOld = 0;
+var ezoTemp = 0;
 var phOld = 0;
 var orpOld = 0;
 
@@ -30,19 +33,24 @@ var poolTemp = 0;
 var ph = 0;
 var orp = 0;
 
+var startTime = Date.now();
+var startupDone = false;
+
 client.on('connect', () => {
   client.subscribe('home/boss/resend');
+  client.publish('home/pi62', 'ok');
 })
 
 client.on('message', function(topic, message) {
     if (topic.toString() == 'home/boss/resend' && message.toString() == '1') {
+        client.publish('home/pi62', 'ok');
       if (airTemp1Old != 0) client.publish('home/pool/airTemp1', airTemp1Old.toString())
       if (airPress1Old != 0) client.publish('home/pool/airPress1', airPress1Old.toString())
       if (airHumid1Old != 0) client.publish('home/pool/airHumid1', airHumid1Old.toString())
-      if (airQuality1Old != 0) client.publish('home/pool/airQuality1', airQuality1Old.toFixed(0).toString())
+      if (airQuality1Old != 0 && startupDone) client.publish('home/pool/airQuality1', airQuality1Old.toFixed(0).toString())
       if (poolTempOld != 0) client.publish('home/pool/poolTemp0', poolTempOld.toString())
-      if (phOld != 0) client.publish('home/pool/ph1', phOld.toString())
-      if (orpOld != 0) client.publish('home/pool/orp1', orpOld.toString())
+      if (phOld != 0 && startupDone) client.publish('home/pool/ph1', phOld.toString())
+      if (orpOld != 0 && startupDone) client.publish('home/pool/orp1', orpOld.toString())
     }
 })
 
@@ -59,7 +67,7 @@ bme680.initialize().then(async () => {
     if (bme680result.data.heat_stable == true) {
       airQuality1 = parseFloat(bme680result.data.gas_resistance)
       if ((airQuality1 - airQuality1Old) > 2000 || (airQuality1 - airQuality1Old) < -2000 ) {
-        client.publish('home/pool/airQuality1', airQuality1.toFixed(0).toString())
+        if (startupDone) client.publish('home/pool/airQuality1', airQuality1.toFixed(0).toString());
         airQuality1Old = airQuality1;
       }
     }
@@ -97,16 +105,20 @@ then(() => {
         //  client.publish('home/pool/poolTemp' + i.toString(), temps[i].value.toString());
         //}
         poolTemp = parseFloat(temps[0].value);
+        poolTemp = poolTemp.toFixed(1);
         client.publish('home/pool/raw/poolTemp0', poolTemp.toString());
         if ((poolTemp - poolTempOld) > 0.2 || (poolTemp - poolTempOld) < -0.2 ) {
           client.publish('home/pool/poolTemp0', poolTemp.toString());
           poolTempOld = poolTemp;
-          ezo.phReadTemp('ph').then((resp) => {
-            if (resp != poolTemp) {
-              //console.log(poolTemp);
-              ezo.phWriteTemp('ph', poolTemp);
-            } 
-          })
+          if ((poolTemp - ezoTemp) > 1.2 || (poolTemp - ezoTemp) < -1.2 ) {
+            ezoTemp = poolTemp;
+            ezo.phReadTemp('ph').then((resp) => {
+              if (resp != poolTemp) {
+                //console.log(poolTemp);
+                ezo.phWriteTemp('ph', poolTemp);
+              } 
+            })
+          }
         }
       })
     }, 30000)
@@ -146,12 +158,29 @@ ezo.info('ph').then(console.log)
       client.publish('home/pool/raw/ph', ph.toString());
       client.publish('home/pool/raw/orp', orp.toString());
       if ((ph - phOld) > 0.01 || (ph - phOld) < -0.01 ) {
-        client.publish('home/pool/ph1', ph.toString());
+        if (startupDone) client.publish('home/pool/ph1', ph.toString());
         phOld = ph;
       }
       if ((orp - orpOld) > 5 || (orp - orpOld) < -5 ) {
-        client.publish('home/pool/orp1', orp.toString());
+        if (startupDone) client.publish('home/pool/orp1', orp.toString());
         orpOld = orp;
       }
     }, 20000);
 }).catch(console.log);
+
+//watchdog
+setInterval(() => {
+  client.publish('home/pi62', 'ok');
+}, 300000);
+
+//startup delay for slow senors
+setInterval(() => {
+  if (startupDone == false) {
+    if ((startTime + 300000) < Date.now()) {
+      startupDone = true;
+      client.publish('home/pool/ph1', ph.toString());
+      client.publish('home/pool/orp1', orp.toString());
+      client.publish('home/pool/airQuality1', airQuality1.toFixed(0).toString());
+    }
+  }
+}, 2000);
